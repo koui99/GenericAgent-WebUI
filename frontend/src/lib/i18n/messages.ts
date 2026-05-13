@@ -41,6 +41,9 @@ const zh: Dict = {
   'chat.attachment_error_short': '错',
   'chat.attachment_error': '出错',
   'chat.turn': '第 {n} 轮',
+  'chat.thinking': '思考中…',
+  'chat.thinking_after_tool': '已执行 {name}，继续思考…',
+  'chat.thinking_turn': '第 {n} 轮推理中…',
   'chat.default_error': '出错了。',
 
   'tool.args': '参数',
@@ -140,6 +143,9 @@ const en: Dict = {
   'chat.attachment_error_short': 'err',
   'chat.attachment_error': 'Error',
   'chat.turn': 'Turn {n}',
+  'chat.thinking': 'Thinking...',
+  'chat.thinking_after_tool': 'Ran {name}, thinking...',
+  'chat.thinking_turn': 'Turn {n} reasoning...',
   'chat.default_error': 'Something went wrong.',
 
   'tool.args': 'args',

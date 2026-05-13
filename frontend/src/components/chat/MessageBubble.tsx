@@ -14,6 +14,31 @@ function StreamingCursor() {
   );
 }
 
+function ThinkingIndicator({ hint }: { hint?: string }) {
+  const { t } = useT();
+  const [elapsed, setElapsed] = React.useState(0);
+
+  React.useEffect(() => {
+    setElapsed(0);
+    const id = setInterval(() => setElapsed((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [hint]);
+
+  return (
+    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <span className="flex gap-0.5">
+        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:0ms]" />
+        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:150ms]" />
+        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:300ms]" />
+      </span>
+      <span>{hint || t('chat.thinking')}</span>
+      {elapsed > 0 && (
+        <span className="tabular-nums text-xs opacity-60">{elapsed}s</span>
+      )}
+    </div>
+  );
+}
+
 export function MessageBubble({ message }: { message: UIMessage }) {
   const { t } = useT();
   const isUser = message.role === 'user';
@@ -25,11 +50,21 @@ export function MessageBubble({ message }: { message: UIMessage }) {
     return -1;
   })();
 
-  const showLoadingDot =
-    !isUser &&
-    isStreaming &&
-    message.timeline.length === 0 &&
-    message.attachmentIds.length === 0;
+  const thinkingHint = (() => {
+    if (isUser || !isStreaming) return null;
+    if (message.timeline.length === 0) return t('chat.thinking');
+    const last = message.timeline[message.timeline.length - 1];
+    if (last.kind === 'text') return null;
+    if (last.kind === 'tool') {
+      const tool = message.tools[last.toolId];
+      if (tool?.status === 'running') return null;
+      return t('chat.thinking_after_tool', { name: tool?.name ?? '' });
+    }
+    if (last.kind === 'turn') {
+      return t('chat.thinking_turn', { n: last.turn });
+    }
+    return t('chat.thinking');
+  })();
 
   return (
     <div className={cn('group flex w-full', isUser ? 'justify-end' : 'justify-start')}>
@@ -81,11 +116,7 @@ export function MessageBubble({ message }: { message: UIMessage }) {
           </div>
         )}
 
-        {showLoadingDot && (
-          <div className="text-muted-foreground">
-            <StreamingCursor />
-          </div>
-        )}
+        {thinkingHint && <ThinkingIndicator hint={thinkingHint} />}
 
         {message.status === 'error' && (
           <div className="rounded-md bg-destructive/10 px-2 py-1 text-xs text-destructive">

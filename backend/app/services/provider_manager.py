@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.ga_integration import sync_providers_to_llmcore
 from app.db.database import AsyncSessionLocal
 from app.models.provider import ProviderConfig
+from app.services.session_manager import session_manager
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,7 @@ async def _sync_from_db(db: AsyncSession) -> None:
         sync_providers_to_llmcore(providers)
     except Exception as exc:
         logger.warning("sync_providers_to_llmcore failed: %s", exc)
+    await session_manager.clear_all()
 
 
 async def sync_active_providers() -> None:

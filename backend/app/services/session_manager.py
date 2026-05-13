@@ -90,6 +90,13 @@ class SessionManager:
         session.agent.abort()
         return True
 
+    async def clear_all(self) -> None:
+        """Destroy all cached sessions. Called when provider config changes."""
+        async with self._lock:
+            for sid in list(self._sessions):
+                await self._destroy(sid)
+            logger.info("Cleared all agent sessions (provider config changed)")
+
     async def destroy(self, session_id: str) -> bool:
         async with self._lock:
             if session_id not in self._sessions:
