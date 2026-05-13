@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: 0.99 0 0;
+    --fg: 0.15 0 0;
+    --muted: 0.96 0 0;
+    --muted-fg: 0.45 0 0;
+    --border: 0.92 0 0;
+    --primary: 0.5 0.18 258;
+    --primary-fg: 0.99 0 0;
+    --accent: 0.95 0.02 258;
+    --destructive: 0.55 0.22 25;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --bg: 0.15 0 0;
+    --fg: 0.96 0 0;
+    --muted: 0.22 0 0;
+    --muted-fg: 0.6 0 0;
+    --border: 0.25 0 0;
+    --primary: 0.72 0.15 258;
+    --primary-fg: 0.15 0 0;
+    --accent: 0.25 0.02 258;
+    --destructive: 0.62 0.22 25;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg text-fg antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+}

@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.local.example
+
+# App data
+backend/data/
+backend/app/core/_ga_shim/__pycache__/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+
+# GenericAgent local state (inside submodule)
+vendor/GenericAgent/temp/
+vendor/GenericAgent/memory/global_mem.txt
+vendor/GenericAgent/memory/global_mem_insight.txt
+vendor/GenericAgent/mykey.py
+vendor/GenericAgent/mykey.json
+vendor/GenericAgent/assets/tmwd_cdp_bridge/config.js
+
+# Editor/session tool
+.claude/
+.gemini/
