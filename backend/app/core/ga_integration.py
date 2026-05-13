@@ -81,17 +81,19 @@ def _bootstrap() -> None:
 def _provider_to_mykey_entry(p: dict[str, Any]) -> dict[str, Any]:
     entry: dict[str, Any] = {
         "apikey": p["apikey"],
-        "api_base": p.get("api_base", "https://api.openai.com/v1"),
+        "apibase": p.get("api_base", "https://api.openai.com/v1"),
         "model": p.get("model", "gpt-4o-mini"),
         "stream": p.get("stream", True),
         "max_retries": p.get("max_retries", 3),
     }
     for extra in (
         "provider", "temperature", "max_tokens", "reasoning_effort",
-        "service_tier", "api_mode", "read_timeout", "connect_timeout",
+        "service_tier", "api_mode", "read_timeout",
     ):
         if p.get(extra) is not None:
             entry[extra] = p[extra]
+    if p.get("connect_timeout") is not None:
+        entry["timeout"] = p["connect_timeout"]
     extra_params = p.get("extra_params") or {}
     if isinstance(extra_params, dict):
         entry.update(extra_params)
