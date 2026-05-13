@@ -5,16 +5,19 @@ import * as React from 'react';
 import { ArrowLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 
+import { LanguageToggle } from '@/components/layout/LanguageToggle';
 import { ProviderForm, type ProviderFormValues } from '@/components/settings/ProviderForm';
 import { ProviderList } from '@/components/settings/ProviderList';
 import { ToolToggleList } from '@/components/settings/ToolToggleList';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { useT } from '@/lib/i18n/provider';
 import { useProviderStore } from '@/store/provider-store';
 import type { Provider } from '@/types/provider';
 
 export default function SettingsPage() {
+  const { t } = useT();
   const { providers, setProviders, upsertProvider, removeProvider } = useProviderStore();
   const [loading, setLoading] = React.useState(true);
   const [loadError, setLoadError] = React.useState<string | null>(null);
@@ -52,7 +55,7 @@ export default function SettingsPage() {
   };
 
   const handleDelete = async (p: Provider) => {
-    if (!confirm(`Delete provider "${p.label || p.key_name}"?`)) return;
+    if (!confirm(t('settings.provider_delete_confirm', { label: p.label || p.key_name }))) return;
     await api.delete(`/api/providers/${p.id}`);
     removeProvider(p.id);
   };
@@ -66,28 +69,31 @@ export default function SettingsPage() {
     <main className="min-h-screen bg-bg">
       <header className="flex h-14 items-center justify-between border-b border-border px-4">
         <div className="flex items-center gap-3">
-          <Button asChild variant="ghost" size="icon" aria-label="Back">
+          <Button asChild variant="ghost" size="icon" aria-label={t('settings.back')}>
             <Link href="/">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <h1 className="text-sm font-semibold">Settings</h1>
+          <h1 className="text-sm font-semibold">{t('settings.title')}</h1>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-1">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
       </header>
 
       <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-8">
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold">Providers</h2>
+              <h2 className="text-base font-semibold">{t('settings.providers_heading')}</h2>
               <p className="text-xs text-muted-foreground">
-                API keys and model configs. Synced into llmcore on save.
+                {t('settings.providers_description')}
               </p>
             </div>
             {editing === undefined && (
               <Button size="sm" onClick={() => setEditing(null)}>
-                <Plus className="h-4 w-4" /> Add provider
+                <Plus className="h-4 w-4" /> {t('settings.add_provider')}
               </Button>
             )}
           </div>
@@ -95,7 +101,9 @@ export default function SettingsPage() {
           {editing !== undefined ? (
             <div className="rounded-lg border border-border p-4">
               <h3 className="mb-4 text-sm font-medium">
-                {editing ? `Edit ${editing.label || editing.key_name}` : 'New provider'}
+                {editing
+                  ? t('settings.edit_provider', { label: editing.label || editing.key_name })
+                  : t('settings.new_provider')}
               </h3>
               <ProviderForm
                 initial={editing}
@@ -105,7 +113,7 @@ export default function SettingsPage() {
             </div>
           ) : loading ? (
             <div className="rounded-lg border border-border p-4 text-sm text-muted-foreground">
-              Loading...
+              {t('settings.providers_loading')}
             </div>
           ) : loadError ? (
             <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
@@ -123,10 +131,8 @@ export default function SettingsPage() {
 
         <section className="space-y-4">
           <div>
-            <h2 className="text-base font-semibold">Tools</h2>
-            <p className="text-xs text-muted-foreground">
-              Enable or disable individual GenericAgent tools for this UI.
-            </p>
+            <h2 className="text-base font-semibold">{t('settings.tools_heading')}</h2>
+            <p className="text-xs text-muted-foreground">{t('settings.tools_description')}</p>
           </div>
           <ToolToggleList />
         </section>

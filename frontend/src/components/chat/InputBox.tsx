@@ -11,6 +11,7 @@ import {
   extractImageFilesFromDrag,
   useAttachments,
 } from '@/hooks/useAttachments';
+import { useT } from '@/lib/i18n/provider';
 import { cn } from '@/lib/utils';
 
 interface InputBoxProps {
@@ -28,8 +29,10 @@ export function InputBox({
   onStop,
   isStreaming,
   disabled,
-  placeholder = 'Send a message...',
+  placeholder,
 }: InputBoxProps) {
+  const { t } = useT();
+  const effectivePlaceholder = placeholder ?? t('chat.placeholder');
   const [text, setText] = React.useState('');
   const [dragOver, setDragOver] = React.useState(false);
   const taRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -125,15 +128,15 @@ export function InputBox({
                 {att.status === 'error' && (
                   <div
                     className="absolute inset-0 flex items-center justify-center bg-destructive/30 text-[10px] text-destructive"
-                    title={att.error || 'Error'}
+                    title={att.error || t('chat.attachment_error')}
                   >
-                    err
+                    {t('chat.attachment_error_short')}
                   </div>
                 )}
                 <button
                   type="button"
                   onClick={() => remove(att.clientId)}
-                  aria-label="Remove attachment"
+                  aria-label={t('chat.remove_attachment')}
                   className="absolute right-0.5 top-0.5 rounded-full bg-bg/80 p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
                 >
                   <X className="h-3 w-3" />
@@ -155,7 +158,7 @@ export function InputBox({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={disabled || isStreaming}
-            aria-label="Attach image"
+            aria-label={t('chat.attach')}
           >
             <ImageIcon className="h-4 w-4" />
           </Button>
@@ -173,7 +176,7 @@ export function InputBox({
             onChange={(e) => setText(e.target.value)}
             onKeyDown={onKeyDown}
             onPaste={onPaste}
-            placeholder={placeholder}
+            placeholder={effectivePlaceholder}
             rows={1}
             disabled={disabled}
             className="min-h-0 flex-1 border-0 bg-transparent p-2 shadow-none focus-visible:ring-0"
@@ -183,7 +186,7 @@ export function InputBox({
               size="icon"
               variant="subtle"
               onClick={onStop}
-              aria-label="Stop generating"
+              aria-label={t('chat.stop')}
             >
               <Square className="h-4 w-4" />
             </Button>
@@ -192,18 +195,14 @@ export function InputBox({
               size="icon"
               onClick={submit}
               disabled={!canSend}
-              aria-label="Send message"
+              aria-label={t('chat.send')}
             >
               <ArrowUp className="h-4 w-4" />
             </Button>
           )}
         </div>
         <div className="mt-2 text-center text-xs text-muted-foreground">
-          {busy
-            ? 'Preparing attachments...'
-            : dragOver
-              ? 'Drop images to attach'
-              : 'Enter to send · Shift+Enter for newline · paste or drop images'}
+          {busy ? t('chat.preparing') : dragOver ? t('chat.drop_here') : t('chat.hint')}
         </div>
       </div>
     </div>

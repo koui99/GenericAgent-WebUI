@@ -2,11 +2,14 @@
 
 import * as React from 'react';
 
+import { useT } from '@/lib/i18n/provider';
+
 import { MessageBubble } from './MessageBubble';
 
 import type { UIMessage } from '@/types/chat';
 
 export function MessageList({ messages }: { messages: UIMessage[] }) {
+  const { t } = useT();
   const ref = React.useRef<HTMLDivElement | null>(null);
   const stickRef = React.useRef(true);
 
@@ -28,7 +31,7 @@ export function MessageList({ messages }: { messages: UIMessage[] }) {
   if (messages.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        Start a conversation below.
+        {t('chat.empty')}
       </div>
     );
   }

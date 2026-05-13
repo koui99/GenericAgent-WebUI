@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 
+import { useT } from '@/lib/i18n/provider';
 import { cn } from '@/lib/utils';
 import type { UIMessage } from '@/types/chat';
 
@@ -14,6 +15,7 @@ function StreamingCursor() {
 }
 
 export function MessageBubble({ message }: { message: UIMessage }) {
+  const { t } = useT();
   const isUser = message.role === 'user';
   const isStreaming = message.status === 'streaming' || message.status === 'pending';
   const lastTextIdx = (() => {
@@ -60,7 +62,7 @@ export function MessageBubble({ message }: { message: UIMessage }) {
                     key={`turn-${i}`}
                     className="text-[10px] uppercase tracking-wide text-muted-foreground"
                   >
-                    Turn {item.turn}
+                    {t('chat.turn', { n: item.turn })}
                   </div>
                 );
               }
@@ -87,7 +89,7 @@ export function MessageBubble({ message }: { message: UIMessage }) {
 
         {message.status === 'error' && (
           <div className="rounded-md bg-destructive/10 px-2 py-1 text-xs text-destructive">
-            {message.errorMessage || 'Something went wrong.'}
+            {message.errorMessage || t('chat.default_error')}
           </div>
         )}
       </div>

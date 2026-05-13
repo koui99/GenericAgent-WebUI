@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { useT } from '@/lib/i18n/provider';
 import type { Provider, ProviderCreate } from '@/types/provider';
 
 export type ProviderFormValues = ProviderCreate;
@@ -86,6 +87,7 @@ interface ProviderFormProps {
 }
 
 export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps) {
+  const { t } = useT();
   const [values, setValues] = React.useState<ProviderFormValues>(() =>
     initial ? toValues(initial) : emptyValues()
   );
@@ -125,30 +127,30 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="key_name">Key name</Label>
+          <Label htmlFor="key_name">{t('form.key_name')}</Label>
           <Input
             id="key_name"
             value={values.key_name}
             onChange={(e) => update('key_name', e.target.value)}
-            placeholder="gpt4o"
+            placeholder={t('form.key_name_placeholder')}
             disabled={!!initial}
             required
           />
-          <p className="text-xs text-muted-foreground">Unique id inside llmcore.mykeys</p>
+          <p className="text-xs text-muted-foreground">{t('form.key_name_hint')}</p>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="label">Display label</Label>
+          <Label htmlFor="label">{t('form.label')}</Label>
           <Input
             id="label"
             value={values.label}
             onChange={(e) => update('label', e.target.value)}
-            placeholder="GPT-4o mini"
+            placeholder={t('form.label_placeholder')}
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <Label>Provider</Label>
+        <Label>{t('form.provider')}</Label>
         <div className="flex flex-wrap gap-2">
           {PROVIDER_PRESETS.map((p) => (
             <Button
@@ -165,7 +167,7 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="apikey">API key</Label>
+        <Label htmlFor="apikey">{t('form.apikey')}</Label>
         <Input
           id="apikey"
           type="password"
@@ -179,7 +181,7 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="api_base">API base</Label>
+          <Label htmlFor="api_base">{t('form.api_base')}</Label>
           <Input
             id="api_base"
             value={values.api_base}
@@ -187,7 +189,7 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="model">Model</Label>
+          <Label htmlFor="model">{t('form.model')}</Label>
           <Input
             id="model"
             value={values.model}
@@ -198,7 +200,7 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="space-y-1.5">
-          <Label htmlFor="api_mode">API mode</Label>
+          <Label htmlFor="api_mode">{t('form.api_mode')}</Label>
           <Input
             id="api_mode"
             value={values.api_mode}
@@ -206,7 +208,7 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="temperature">Temperature</Label>
+          <Label htmlFor="temperature">{t('form.temperature')}</Label>
           <Input
             id="temperature"
             type="number"
@@ -220,7 +222,7 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="max_tokens">Max tokens</Label>
+          <Label htmlFor="max_tokens">{t('form.max_tokens')}</Label>
           <Input
             id="max_tokens"
             type="number"
@@ -239,28 +241,28 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
             checked={values.stream}
             onCheckedChange={(v) => update('stream', v)}
           />
-          Stream
+          {t('form.stream')}
         </label>
         <label className="flex items-center gap-2 text-sm">
           <Switch
             checked={values.supports_vision}
             onCheckedChange={(v) => update('supports_vision', v)}
           />
-          Vision
+          {t('form.vision')}
         </label>
         <label className="flex items-center gap-2 text-sm">
           <Switch
             checked={values.is_active}
             onCheckedChange={(v) => update('is_active', v)}
           />
-          Active
+          {t('form.active')}
         </label>
         <label className="flex items-center gap-2 text-sm">
           <Switch
             checked={values.enabled}
             onCheckedChange={(v) => update('enabled', v)}
           />
-          Enabled
+          {t('form.enabled')}
         </label>
       </div>
 
@@ -272,10 +274,10 @@ export function ProviderForm({ initial, onSubmit, onCancel }: ProviderFormProps)
 
       <div className="flex justify-end gap-2 pt-2">
         <Button type="button" variant="ghost" onClick={onCancel} disabled={submitting}>
-          Cancel
+          {t('form.cancel')}
         </Button>
         <Button type="submit" disabled={submitting}>
-          {submitting ? 'Saving...' : initial ? 'Save changes' : 'Create'}
+          {submitting ? t('form.saving') : initial ? t('form.save_changes') : t('form.create')}
         </Button>
       </div>
     </form>

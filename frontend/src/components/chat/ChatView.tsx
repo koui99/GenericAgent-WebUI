@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { useChatStream } from '@/hooks/useChatStream';
+import { useT } from '@/lib/i18n/provider';
 import { useChatStore } from '@/store/chat-store';
 import type { UIMessage } from '@/types/chat';
 
@@ -16,6 +17,7 @@ interface ChatViewProps {
 }
 
 export function ChatView({ sessionId, initialMessages, hasActiveProvider }: ChatViewProps) {
+  const { t } = useT();
   const { messages, setMessages, reset } = useChatStore();
   const { send, stop, isStreaming } = useChatStream(sessionId);
 
@@ -29,11 +31,11 @@ export function ChatView({ sessionId, initialMessages, hasActiveProvider }: Chat
       <MessageList messages={messages} />
       {!hasActiveProvider && messages.length === 0 && (
         <div className="border-t border-border bg-muted/30 px-4 py-3 text-center text-sm text-muted-foreground">
-          No provider configured. Open{' '}
+          {t('chat.no_provider_prefix')}{' '}
           <a className="underline underline-offset-4 hover:text-fg" href="/settings">
-            Settings
+            {t('chat.no_provider_link')}
           </a>{' '}
-          to add one.
+          {t('chat.no_provider_suffix')}
         </div>
       )}
       <InputBox
@@ -42,9 +44,7 @@ export function ChatView({ sessionId, initialMessages, hasActiveProvider }: Chat
         onStop={stop}
         isStreaming={isStreaming}
         disabled={!hasActiveProvider}
-        placeholder={
-          hasActiveProvider ? 'Send a message...' : 'Add a provider in Settings to start chatting'
-        }
+        placeholder={hasActiveProvider ? t('chat.placeholder') : t('chat.placeholder_no_provider')}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { Check, ChevronDown, ChevronRight, Loader2, Wrench, X } from 'lucide-react';
 
+import { useT } from '@/lib/i18n/provider';
 import { cn } from '@/lib/utils';
 import type { UIToolCall } from '@/types/chat';
 
@@ -20,6 +21,7 @@ function compactArgs(args: Record<string, unknown>): string {
 }
 
 export function ToolCallCard({ call }: { call: UIToolCall }) {
+  const { t } = useT();
   const [expanded, setExpanded] = React.useState(false);
   const isRunning = call.status === 'running';
   const isError = call.status === 'error' || !call.ok;
@@ -74,7 +76,7 @@ export function ToolCallCard({ call }: { call: UIToolCall }) {
         <div className="space-y-2 border-t border-border/60 px-2.5 py-2 font-mono">
           <div>
             <div className="mb-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-              args
+              {t('tool.args')}
             </div>
             <pre className="max-h-40 overflow-auto whitespace-pre-wrap break-all rounded bg-bg p-1.5 text-[11px]">
               {argsJson}
@@ -83,7 +85,7 @@ export function ToolCallCard({ call }: { call: UIToolCall }) {
           {(call.preview || !isRunning) && (
             <div>
               <div className="mb-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-                result
+                {t('tool.result')}
               </div>
               <pre
                 className={cn(
@@ -91,7 +93,7 @@ export function ToolCallCard({ call }: { call: UIToolCall }) {
                   isError && 'text-destructive'
                 )}
               >
-                {isRunning ? 'running...' : call.preview || '(empty)'}
+                {isRunning ? t('tool.running') : call.preview || t('tool.empty')}
               </pre>
             </div>
           )}

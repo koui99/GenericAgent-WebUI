@@ -4,9 +4,11 @@ import * as React from 'react';
 
 import { Switch } from '@/components/ui/switch';
 import { api } from '@/lib/api';
+import { useT } from '@/lib/i18n/provider';
 import type { ToolItem } from '@/types/tool';
 
 export function ToolToggleList() {
+  const { t } = useT();
   const [tools, setTools] = React.useState<ToolItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -42,9 +44,14 @@ export function ToolToggleList() {
       setTools((prev) => prev.map((t) => (t.name === name ? updated : t)));
     } catch (err) {
       setTools((prev) =>
-        prev.map((t) => (t.name === name ? { ...t, enabled: !enabled } : t))
+        prev.map((tool) => (tool.name === name ? { ...tool, enabled: !enabled } : tool))
       );
-      alert(`Failed to toggle ${name}: ${err instanceof Error ? err.message : err}`);
+      alert(
+        t('settings.tools_toggle_failed', {
+          name,
+          error: err instanceof Error ? err.message : String(err),
+        })
+      );
     } finally {
       setPending((prev) => {
         const next = new Set(prev);
@@ -57,7 +64,7 @@ export function ToolToggleList() {
   if (loading) {
     return (
       <div className="rounded-lg border border-border p-4 text-sm text-muted-foreground">
-        Loading tools...
+        {t('settings.tools_loading')}
       </div>
     );
   }
@@ -71,28 +78,28 @@ export function ToolToggleList() {
   if (tools.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-        No tools exposed by GenericAgent.
+        {t('settings.tools_empty')}
       </div>
     );
   }
 
   return (
     <div className="divide-y divide-border rounded-lg border border-border">
-      {tools.map((t) => (
-        <div key={t.name} className="flex items-start gap-4 px-4 py-3">
+      {tools.map((tool) => (
+        <div key={tool.name} className="flex items-start gap-4 px-4 py-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-baseline gap-2">
-              <span className="font-mono text-sm font-medium">{t.name}</span>
+              <span className="font-mono text-sm font-medium">{tool.name}</span>
             </div>
-            {t.description && (
-              <p className="mt-0.5 text-xs text-muted-foreground">{t.description}</p>
+            {tool.description && (
+              <p className="mt-0.5 text-xs text-muted-foreground">{tool.description}</p>
             )}
           </div>
           <Switch
-            checked={t.enabled}
-            disabled={pending.has(t.name)}
-            onCheckedChange={(v) => toggle(t.name, v)}
-            aria-label={`Toggle ${t.name}`}
+            checked={tool.enabled}
+            disabled={pending.has(tool.name)}
+            onCheckedChange={(v) => toggle(tool.name, v)}
+            aria-label={t('settings.tools_toggle', { name: tool.name })}
           />
         </div>
       ))}
