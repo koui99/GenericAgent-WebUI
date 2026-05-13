@@ -54,3 +54,4 @@ vendor/GenericAgent/assets/tmwd_cdp_bridge/config.js
 # Editor/session tool
 .claude/
 .gemini/
+.ace-tool/

@@ -54,7 +54,7 @@ async def _maybe_update_title(session_id: str, user_text: str) -> None:
         row = (
             await db.execute(select(ChatSession).where(ChatSession.id == session_id))
         ).scalar_one_or_none()
-        if not row or row.title not in ("New chat", "", None):
+        if not row or row.title not in ("New chat", "新会话", "", None):
             return
         first_line = next((line.strip() for line in user_text.splitlines() if line.strip()), "")
         if not first_line:

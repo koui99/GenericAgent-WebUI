@@ -58,9 +58,11 @@ export async function streamChat(
         }
       },
       onclose() {
-        if (!closedByDone) {
+        if (closedByDone) {
           callbacks.onClose?.();
         }
+        // Throw to prevent @microsoft/fetch-event-source from retrying
+        throw new Error('stream-ended');
       },
       onerror(err) {
         throw err;
@@ -68,6 +70,7 @@ export async function streamChat(
     });
   } catch (err) {
     if ((err as { name?: string })?.name === 'AbortError') return;
+    if (closedByDone) return;
     const error = err instanceof Error ? err : new Error(String(err));
     callbacks.onError?.(error);
     return;
