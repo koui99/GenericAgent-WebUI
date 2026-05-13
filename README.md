@@ -1,5 +1,7 @@
 # GenericAgent WebUI
 
+English | [简体中文](./README.zh-CN.md)
+
 A modern, multimodal web UI for [GenericAgent](https://github.com/lsdefine/GenericAgent) — the self-evolving autonomous agent framework.
 
 ## Features
