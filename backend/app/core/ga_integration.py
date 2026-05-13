@@ -98,9 +98,31 @@ def _provider_to_mykey_entry(p: dict[str, Any]) -> dict[str, Any]:
     return entry
 
 
+_GA_KIND_TOKENS = ("claude", "oai", "mixin", "native")
+_GA_FILTER_TOKENS = ("api", "config", "cookie")
+
+
+def _ga_compatible_key(user_key: str, api_mode: str | None) -> str:
+    lower = user_key.lower()
+    has_kind = any(t in lower for t in _GA_KIND_TOKENS)
+    has_filter = any(t in lower for t in _GA_FILTER_TOKENS)
+    if has_kind and has_filter:
+        return user_key
+    kind = "claude" if api_mode == "anthropic" else "oai"
+    parts = [user_key]
+    if not has_kind:
+        parts.append(kind)
+    if not has_filter:
+        parts.append("api")
+    return "_".join(parts)
+
+
 def sync_providers_to_llmcore(providers: list[dict[str, Any]]) -> None:
     _bootstrap()
-    merged = {p["key_name"]: _provider_to_mykey_entry(p) for p in providers}
+    merged: dict[str, Any] = {}
+    for p in providers:
+        key = _ga_compatible_key(p["key_name"], p.get("api_mode"))
+        merged[key] = _provider_to_mykey_entry(p)
     with _LOCK:
         _llmcore.__dict__["mykeys"] = merged
     logger.info("Synced %d providers into llmcore.mykeys", len(providers))

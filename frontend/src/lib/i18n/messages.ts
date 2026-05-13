@@ -80,8 +80,8 @@ const zh: Dict = {
   'settings.tools_toggle_failed': '切换 {name} 失败：{error}',
 
   'form.key_name': 'Key 名称',
-  'form.key_name_placeholder': 'gpt4o',
-  'form.key_name_hint': 'llmcore.mykeys 中唯一的 id',
+  'form.key_name_placeholder': 'oai_api',
+  'form.key_name_hint': 'llmcore.mykeys 中唯一的 id。OpenAI 兼容接口建议含 oai，Anthropic 建议含 claude，保存时会自动补 _api 后缀。',
   'form.label': '显示名称',
   'form.label_placeholder': 'GPT-4o mini',
   'form.provider': 'Provider',
@@ -179,8 +179,8 @@ const en: Dict = {
   'settings.tools_toggle_failed': 'Failed to toggle {name}: {error}',
 
   'form.key_name': 'Key name',
-  'form.key_name_placeholder': 'gpt4o',
-  'form.key_name_hint': 'Unique id inside llmcore.mykeys',
+  'form.key_name_placeholder': 'openai_api',
+  'form.key_name_hint': 'Unique id in llmcore.mykeys. Suffixes like _oai_api or _claude_api are added on save to match GenericAgent conventions.',
   'form.label': 'Display label',
   'form.label_placeholder': 'GPT-4o mini',
   'form.provider': 'Provider',
