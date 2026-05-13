@@ -52,7 +52,8 @@ cd GenericAgent-WebUI
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-pip install -r ../vendor/GenericAgent/requirements.txt   # GenericAgent 自身依赖
+# GenericAgent 核心依赖（上游只提供 pyproject.toml，没有 requirements.txt）
+pip install requests beautifulsoup4 bottle simple-websocket-server
 cp .env.example .env   # 可选，默认值开箱可用
 .venv/bin/uvicorn app.main:app --reload   # 监听 :8000
 

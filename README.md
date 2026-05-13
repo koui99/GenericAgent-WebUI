@@ -52,7 +52,8 @@ cd genericagent-webui
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-pip install -r ../vendor/GenericAgent/requirements.txt   # GA's own deps
+# GenericAgent core deps (it ships pyproject.toml only, no requirements.txt)
+pip install requests beautifulsoup4 bottle simple-websocket-server
 cp .env.example .env   # optional — all keys default to sensible values
 .venv/bin/uvicorn app.main:app --reload   # :8000
 
