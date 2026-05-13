@@ -275,7 +275,7 @@ def run_agent_loop(
         handler,
         tools,
         max_turns=max_turns,
-        verbose=False,
+        verbose=True,
         initial_user_content=initial_user_content,
     )
 

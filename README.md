@@ -66,6 +66,23 @@ npm run dev   # :3000
 
 Open http://localhost:3000 → add a provider in **Settings** → start chatting.
 
+### Production deployment
+
+For VPS or server deployment, use production mode to reduce memory usage (~80 MB vs ~550 MB in dev mode) and improve page load speed:
+
+```bash
+# Frontend: build once, then serve
+cd frontend
+npm run build          # generates optimized .next/ bundle
+npx next start -p 3000   # production server, ~80 MB RAM
+
+# Backend: drop --reload for production
+cd backend
+.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+> **Tip**: On low-memory servers (≤ 2 GB), always use production mode. `next dev` compiles on-the-fly and can exhaust available RAM, causing builds and page loads to hang.
+
 ### Health check
 
 ```bash

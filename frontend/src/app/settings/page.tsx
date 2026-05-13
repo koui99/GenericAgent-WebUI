@@ -66,15 +66,15 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-bg">
-      <header className="flex h-14 items-center justify-between border-b border-border px-4">
+    <main className="min-h-screen bg-bg grid-bg">
+      <header className="flex h-12 items-center justify-between border-b border-border/30 bg-surface/40 px-4 glass">
         <div className="flex items-center gap-3">
-          <Button asChild variant="ghost" size="icon" aria-label={t('settings.back')}>
+          <Button asChild variant="ghost" size="icon" aria-label={t('settings.back')} className="text-primary hover:bg-primary/10">
             <Link href="/">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <h1 className="text-sm font-semibold">{t('settings.title')}</h1>
+          <h1 className="font-mono text-xs font-bold uppercase tracking-widest text-fg/80">{t('settings.title')}</h1>
         </div>
         <div className="flex items-center gap-1">
           <LanguageToggle />
@@ -86,21 +86,21 @@ export default function SettingsPage() {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold">{t('settings.providers_heading')}</h2>
+              <h2 className="font-mono text-sm font-semibold uppercase tracking-wide">{t('settings.providers_heading')}</h2>
               <p className="text-xs text-muted-foreground">
                 {t('settings.providers_description')}
               </p>
             </div>
             {editing === undefined && (
-              <Button size="sm" onClick={() => setEditing(null)}>
+              <Button size="sm" onClick={() => setEditing(null)} className="border-primary/30 bg-primary/10 font-mono text-xs uppercase tracking-wider text-primary hover:bg-primary/20">
                 <Plus className="h-4 w-4" /> {t('settings.add_provider')}
               </Button>
             )}
           </div>
 
           {editing !== undefined ? (
-            <div className="rounded-lg border border-border p-4">
-              <h3 className="mb-4 text-sm font-medium">
+            <div className="hud-panel rounded-lg p-4 hud-corner">
+              <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-wider text-primary/80">
                 {editing
                   ? t('settings.edit_provider', { label: editing.label || editing.key_name })
                   : t('settings.new_provider')}
@@ -112,11 +112,11 @@ export default function SettingsPage() {
               />
             </div>
           ) : loading ? (
-            <div className="rounded-lg border border-border p-4 text-sm text-muted-foreground">
+            <div className="hud-panel rounded-lg p-4 font-mono text-xs text-muted-foreground">
               {t('settings.providers_loading')}
             </div>
           ) : loadError ? (
-            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 font-mono text-xs text-destructive">
               {loadError}
             </div>
           ) : (
@@ -131,7 +131,7 @@ export default function SettingsPage() {
 
         <section className="space-y-4">
           <div>
-            <h2 className="text-base font-semibold">{t('settings.tools_heading')}</h2>
+            <h2 className="font-mono text-sm font-semibold uppercase tracking-wide">{t('settings.tools_heading')}</h2>
             <p className="text-xs text-muted-foreground">{t('settings.tools_description')}</p>
           </div>
           <ToolToggleList />

@@ -30,8 +30,11 @@ export function MessageList({ messages }: { messages: UIMessage[] }) {
 
   if (messages.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        {t('chat.empty')}
+      <div className="flex h-full flex-col items-center justify-center gap-3">
+        <div className="h-2 w-2 rounded-full bg-primary/50 animate-pulse-slow glow-dot" />
+        <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground/60">
+          {t('chat.empty')}
+        </span>
       </div>
     );
   }
@@ -40,7 +43,7 @@ export function MessageList({ messages }: { messages: UIMessage[] }) {
     <div
       ref={ref}
       onScroll={onScroll}
-      className="flex-1 overflow-y-auto px-4 py-6"
+      className="flex-1 overflow-y-auto px-4 py-6 scrollbar-thin"
     >
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
         {messages.map((m) => (

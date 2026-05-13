@@ -22,8 +22,14 @@ const config: Config = {
           DEFAULT: 'oklch(var(--primary) / <alpha-value>)',
           foreground: 'oklch(var(--primary-fg) / <alpha-value>)',
         },
-        accent: 'oklch(var(--accent) / <alpha-value>)',
+        accent: {
+          DEFAULT: 'oklch(var(--accent) / <alpha-value>)',
+          foreground: 'oklch(var(--accent-fg) / <alpha-value>)',
+        },
         destructive: 'oklch(var(--destructive) / <alpha-value>)',
+        'sidebar-bg': 'oklch(var(--sidebar-bg) / <alpha-value>)',
+        glow: 'oklch(var(--glow) / <alpha-value>)',
+        surface: 'oklch(var(--surface) / <alpha-value>)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -33,6 +39,11 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+      },
+      animation: {
+        'pulse-slow': 'pulse-dot 2s ease-in-out infinite',
+        'breathing': 'breathing 3s ease-in-out infinite',
+        'scanline': 'scanline-scroll 8s linear infinite',
       },
     },
   },

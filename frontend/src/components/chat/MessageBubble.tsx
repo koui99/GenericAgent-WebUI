@@ -10,7 +10,7 @@ import { ToolCallCard } from './ToolCallCard';
 
 function StreamingCursor() {
   return (
-    <span className="ml-0.5 inline-block h-4 w-[2px] animate-pulse bg-fg/60 align-middle" />
+    <span className="ml-0.5 inline-block h-4 w-[2px] animate-pulse bg-primary/80 align-middle glow-dot" />
   );
 }
 
@@ -25,15 +25,15 @@ function ThinkingIndicator({ hint }: { hint?: string }) {
   }, [hint]);
 
   return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <span className="flex gap-0.5">
-        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:0ms]" />
-        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:150ms]" />
-        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:300ms]" />
+    <div className="flex items-center gap-2 font-mono text-xs text-primary/70">
+      <span className="flex gap-1">
+        <span className="h-1 w-1 animate-bounce rounded-full bg-primary/60 [animation-delay:0ms]" />
+        <span className="h-1 w-1 animate-bounce rounded-full bg-primary/60 [animation-delay:150ms]" />
+        <span className="h-1 w-1 animate-bounce rounded-full bg-primary/60 [animation-delay:300ms]" />
       </span>
-      <span>{hint || t('chat.thinking')}</span>
+      <span className="uppercase tracking-wider">{hint || t('chat.thinking')}</span>
       {elapsed > 0 && (
-        <span className="tabular-nums text-xs opacity-60">{elapsed}s</span>
+        <span className="tabular-nums opacity-60">{elapsed}s</span>
       )}
     </div>
   );
@@ -70,10 +70,21 @@ export function MessageBubble({ message }: { message: UIMessage }) {
     <div className={cn('group flex w-full', isUser ? 'justify-end' : 'justify-start')}>
       <div
         className={cn(
-          'max-w-[85%] space-y-2 rounded-xl text-sm leading-relaxed',
-          isUser ? 'bg-accent px-4 py-3 text-fg' : 'bg-transparent text-fg'
+          'max-w-[80%] space-y-2 text-sm leading-relaxed',
+          isUser
+            ? 'rounded-lg border border-primary/25 bg-primary/5 px-4 py-3 text-fg breathing-glow hud-corner'
+            : 'rounded-lg border border-border/30 bg-surface/40 px-4 py-3 text-fg glass'
         )}
       >
+        {!isUser && (
+          <div className="mb-1 flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary/70 glow-dot" />
+            <span className="font-mono text-[10px] uppercase tracking-widest text-primary/60">
+              agent
+            </span>
+          </div>
+        )}
+
         {message.attachmentIds.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {message.attachmentIds.map((id) => (
@@ -82,7 +93,7 @@ export function MessageBubble({ message }: { message: UIMessage }) {
                 key={id}
                 src={`/api/attachments/${id}/file`}
                 alt="attachment"
-                className="max-h-48 max-w-[240px] rounded-md border border-border object-contain"
+                className="max-h-48 max-w-[240px] rounded border border-primary/20 object-contain"
               />
             ))}
           </div>
@@ -95,9 +106,11 @@ export function MessageBubble({ message }: { message: UIMessage }) {
                 return (
                   <div
                     key={`turn-${i}`}
-                    className="text-[10px] uppercase tracking-wide text-muted-foreground"
+                    className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-accent/70"
                   >
+                    <span className="h-px flex-1 bg-accent/20" />
                     {t('chat.turn', { n: item.turn })}
+                    <span className="h-px flex-1 bg-accent/20" />
                   </div>
                 );
               }
@@ -119,7 +132,7 @@ export function MessageBubble({ message }: { message: UIMessage }) {
         {thinkingHint && <ThinkingIndicator hint={thinkingHint} />}
 
         {message.status === 'error' && (
-          <div className="rounded-md bg-destructive/10 px-2 py-1 text-xs text-destructive">
+          <div className="rounded border border-destructive/30 bg-destructive/10 px-2 py-1 font-mono text-xs text-destructive">
             {message.errorMessage || t('chat.default_error')}
           </div>
         )}

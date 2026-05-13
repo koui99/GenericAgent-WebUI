@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 _TURN_RE = re.compile(r"LLM Running \(Turn (\d+)\)")
 _NOISE_LINE_RE = re.compile(r"^\s*(?:\*\*)?(?:Turn \d+|LLM Running \(Turn \d+\)).*?(?:\*\*)?\s*$")
-_TOOL_HEADER_RE = re.compile(r"^🛠️ \w+\(.*?\)\s*$")
+_TOOL_HEADER_RE = re.compile(r"^🛠️ (?:Tool: )?")
+_FENCE_RE = re.compile(r"^`{4,}")
 
 
 def format_sse(event: str, data: Any) -> str:
@@ -21,13 +22,38 @@ def format_sse(event: str, data: Any) -> str:
     return f"event: {event}\ndata: {payload}\n\n"
 
 
-def _clean_chunk(text: str) -> str:
-    out_lines: list[str] = []
-    for line in text.split("\n"):
-        if _NOISE_LINE_RE.match(line) or _TOOL_HEADER_RE.match(line):
-            continue
-        out_lines.append(line)
-    return "\n".join(out_lines)
+class _ChunkFilter:
+    """Filters verbose agent_runner_loop output, suppressing tool fences and tool output."""
+
+    def __init__(self):
+        self._in_fence = 0
+
+    def process(self, text: str) -> tuple[str | None, int | None]:
+        """Returns (cleaned_text_or_None, turn_number_or_None)."""
+        turn: int | None = None
+        for m in _TURN_RE.finditer(text):
+            turn = int(m.group(1))
+
+        if _FENCE_RE.match(text.strip()):
+            if self._in_fence:
+                self._in_fence -= 1
+            else:
+                self._in_fence += 1
+            return None, turn
+
+        if self._in_fence:
+            return None, turn
+
+        if _TOOL_HEADER_RE.search(text):
+            return None, turn
+
+        out_lines: list[str] = []
+        for line in text.split("\n"):
+            if _NOISE_LINE_RE.match(line):
+                continue
+            out_lines.append(line)
+        cleaned = "\n".join(out_lines)
+        return (cleaned if cleaned.strip() else None), turn
 
 
 async def stream_chat_events(
@@ -63,6 +89,7 @@ async def stream_chat_events(
 
     session.is_running = True
     fut = loop.run_in_executor(None, _drive)
+    filt = _ChunkFilter()
 
     try:
         yield "start", {"session_id": session.session_id}
@@ -74,10 +101,10 @@ async def stream_chat_events(
                 break
             if event_type == "chunk":
                 text = payload.get("text", "")
-                for m in _TURN_RE.finditer(text):
-                    yield "turn", {"turn": int(m.group(1))}
-                cleaned = _clean_chunk(text)
-                if cleaned.strip():
+                cleaned, turn = filt.process(text)
+                if turn is not None:
+                    yield "turn", {"turn": turn}
+                if cleaned:
                     yield "chunk", {"text": cleaned}
                 continue
             yield event_type, payload

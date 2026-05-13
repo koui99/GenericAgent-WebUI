@@ -48,17 +48,24 @@ export default async function HomePage() {
   const parts = unreachable.split(backendUrl);
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-8">
-      <div className="w-full max-w-md space-y-4 text-center">
-        <h1 className="text-xl font-semibold tracking-tight">{t('app.name')}</h1>
-        <p className="text-sm text-muted-foreground">
-          {parts[0]}
-          <code>{backendUrl}</code>
-          {parts[1] ?? ''}
-        </p>
+    <main className="flex min-h-screen items-center justify-center p-8 grid-bg">
+      <div className="w-full max-w-md space-y-6 text-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-3 w-3 rounded-full bg-primary animate-pulse-slow glow-dot" />
+          <h1 className="font-mono text-lg font-bold uppercase tracking-widest text-primary glow-text">
+            {t('app.name')}
+          </h1>
+        </div>
+        <div className="hud-panel rounded-lg p-4 hud-corner">
+          <p className="font-mono text-xs text-muted-foreground">
+            {parts[0]}
+            <code className="text-primary/80">{backendUrl}</code>
+            {parts[1] ?? ''}
+          </p>
+        </div>
         <a
           href="/settings"
-          className="inline-block rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+          className="inline-block rounded border border-primary/30 px-4 py-2 font-mono text-xs uppercase tracking-wider text-primary transition-all hover:border-primary/60 hover:bg-primary/10 glow-border"
         >
           {t('home.goto_settings')}
         </a>

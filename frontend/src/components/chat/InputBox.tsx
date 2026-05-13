@@ -90,7 +90,7 @@ export function InputBox({
   };
 
   return (
-    <div className="border-t border-border bg-bg px-4 py-4">
+    <div className="border-t border-border/30 bg-surface/40 px-4 py-4 glass">
       <div
         className="mx-auto w-full max-w-3xl"
         onDragEnter={(e) => {
@@ -112,7 +112,7 @@ export function InputBox({
             {items.map((att) => (
               <div
                 key={att.clientId}
-                className="group relative h-16 w-16 overflow-hidden rounded-md border border-border bg-muted"
+                className="group relative h-16 w-16 overflow-hidden rounded border border-primary/20 bg-surface/60"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -122,12 +122,12 @@ export function InputBox({
                 />
                 {(att.status === 'compressing' || att.status === 'uploading') && (
                   <div className="absolute inset-0 flex items-center justify-center bg-bg/60">
-                    <Loader2 className="h-4 w-4 animate-spin text-fg" />
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
                   </div>
                 )}
                 {att.status === 'error' && (
                   <div
-                    className="absolute inset-0 flex items-center justify-center bg-destructive/30 text-[10px] text-destructive"
+                    className="absolute inset-0 flex items-center justify-center bg-destructive/20 font-mono text-[10px] text-destructive"
                     title={att.error || t('chat.attachment_error')}
                   >
                     {t('chat.attachment_error_short')}
@@ -148,8 +148,10 @@ export function InputBox({
 
         <div
           className={cn(
-            'flex items-end gap-2 rounded-xl border border-border bg-bg p-2 transition-colors focus-within:border-fg/40',
-            dragOver && 'border-primary bg-primary/5'
+            'flex items-end gap-2 rounded-lg border bg-surface/30 p-2.5 transition-all hud-corner',
+            dragOver
+              ? 'border-primary/60 bg-primary/5 glow-border-active'
+              : 'border-border/40 glow-border focus-within:glow-border-active'
           )}
         >
           <Button
@@ -159,6 +161,7 @@ export function InputBox({
             onClick={() => fileInputRef.current?.click()}
             disabled={disabled || isStreaming}
             aria-label={t('chat.attach')}
+            className="text-muted-foreground hover:text-primary"
           >
             <ImageIcon className="h-4 w-4" />
           </Button>
@@ -184,9 +187,10 @@ export function InputBox({
           {isStreaming ? (
             <Button
               size="icon"
-              variant="subtle"
+              variant="ghost"
               onClick={onStop}
               aria-label={t('chat.stop')}
+              className="text-destructive hover:bg-destructive/10"
             >
               <Square className="h-4 w-4" />
             </Button>
@@ -196,12 +200,13 @@ export function InputBox({
               onClick={submit}
               disabled={!canSend}
               aria-label={t('chat.send')}
+              className="bg-primary/20 text-primary hover:bg-primary/30 disabled:opacity-30"
             >
               <ArrowUp className="h-4 w-4" />
             </Button>
           )}
         </div>
-        <div className="mt-2 text-center text-xs text-muted-foreground">
+        <div className="mt-2 text-center font-mono text-[10px] uppercase tracking-wider text-muted-foreground/60">
           {busy ? t('chat.preparing') : dragOver ? t('chat.drop_here') : t('chat.hint')}
         </div>
       </div>

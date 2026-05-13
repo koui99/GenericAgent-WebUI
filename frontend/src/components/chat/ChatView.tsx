@@ -30,9 +30,9 @@ export function ChatView({ sessionId, initialMessages, hasActiveProvider }: Chat
     <div className="flex h-full min-h-0 flex-col">
       <MessageList messages={messages} />
       {!hasActiveProvider && messages.length === 0 && (
-        <div className="border-t border-border bg-muted/30 px-4 py-3 text-center text-sm text-muted-foreground">
+        <div className="border-t border-border/30 bg-surface/40 px-4 py-3 text-center font-mono text-xs text-muted-foreground glass">
           {t('chat.no_provider_prefix')}{' '}
-          <a className="underline underline-offset-4 hover:text-fg" href="/settings">
+          <a className="text-primary underline underline-offset-4 hover:text-primary/80" href="/settings">
             {t('chat.no_provider_link')}
           </a>{' '}
           {t('chat.no_provider_suffix')}
